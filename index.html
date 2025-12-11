@@ -35,6 +35,8 @@
         .tab-active { border-bottom: 3px solid #1e3a8a; color: #1e3a8a; font-weight: 600; }
         .service-card { transition: all 0.2s ease-in-out; }
         .service-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .accordion-content.open { max-height: 1000px; transition: max-height 0.5s ease-in; }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800">
@@ -44,12 +46,13 @@
         <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight">Hennig Financial LLC</h1>
-                <p class="text-sm text-stone-300">Proactive Accounting: Compliance & Audit-Ready Support</p>
+                <p class="text-sm text-stone-300">Modern Tax, Bookkeeping & Payroll Support</p>
             </div>
             <div class="mt-4 md:mt-0 flex gap-4 text-sm">
                 <button onclick="scrollToSection('services')" class="hover:text-forest-400 transition">Services</button>
-                <button onclick="scrollToSection('about')" class="hover:text-forest-400 transition">About Ron</button>
-                <button onclick="scrollToSection('contact')" class="bg-forest-600 hover:bg-forest-700 px-4 py-2 rounded font-semibold transition">Book Consultation</button>
+                <a href="about.html" class="text-stone-300 hover:text-forest-400 transition font-medium">About</a>
+                <a href="resources.html" class="text-stone-300 hover:text-forest-400 transition font-medium">FAQ & Resources</a>
+                <button onclick="requestQuote('default')" class="bg-forest-600 hover:bg-forest-700 px-4 py-2 rounded font-semibold transition">Get Started</button>
             </div>
         </div>
     </header>
@@ -59,16 +62,16 @@
 
         <!-- Intro -->
         <section class="lg:col-span-12 mb-4 bg-white p-6 rounded-lg shadow-sm border-l-4 border-navy-800">
-            <h2 class="text-xl font-bold text-navy-800 mb-2">Beyond Bookkeeping: Audit-Ready Financials</h2>
+            <h2 class="text-xl font-bold text-navy-800 mb-2">Tax, Bookkeeping & Payroll for Small Businesses</h2>
             <p class="text-stone-600 mb-4">
-                Welcome! I provide a comprehensive suite of financial services designed to reduce risk and increase confidence. 
-                Whether you're a freelancer, a small business owner, or a non-profit, my goal is to provide **transparent pricing** and **defensible records**.
+                Flat-rate, transparent financial services designed to reduce stress and keep your finances on track year-round.
             </p>
             <div class="flex flex-wrap gap-2">
-                <span class="px-3 py-1 bg-stone-100 text-stone-600 text-xs rounded-full font-semibold">Individuals & Families</span>
-                <span class="px-3 py-1 bg-stone-100 text-stone-600 text-xs rounded-full font-semibold">LGBTQ+ Community</span>
-                <span class="px-3 py-1 bg-stone-100 text-stone-600 text-xs rounded-full font-semibold">Freelancers</span>
-                <span class="px-3 py-1 bg-stone-100 text-stone-600 text-xs rounded-full font-semibold">Small Businesses</span>
+                <span class="px-3 py-1 bg-stone-100 text-stone-600 text-xs rounded-full font-semibold">Tax Preparation</span>
+                <span class="px-3 py-1 bg-stone-100 text-stone-600 text-xs rounded-full font-semibold">Bookkeeping</span>
+                <span class="px-3 py-1 bg-stone-100 text-stone-600 text-xs rounded-full font-semibold">Payroll & HR Support</span>
+                <span class="px-3 py-1 bg-stone-100 text-stone-600 text-xs rounded-full font-semibold">Small Business Services</span>
+                <span class="px-3 py-1 bg-stone-100 text-stone-600 text-xs rounded-full font-semibold">Individuals & Freelancers</span>
             </div>
         </section>
 
@@ -79,8 +82,7 @@
                 <nav class="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
                     <button onclick="switchTab('tax')" id="btn-tax" class="tab-btn text-left px-4 py-2 rounded-md hover:bg-stone-50 text-sm font-medium transition whitespace-nowrap tab-active">Tax Preparation</button>
                     <button onclick="switchTab('bookkeeping')" id="btn-bookkeeping" class="tab-btn text-left px-4 py-2 rounded-md hover:bg-stone-50 text-sm font-medium transition whitespace-nowrap">Bookkeeping</button>
-                    <button onclick="switchTab('payroll')" id="btn-payroll" class="tab-btn text-left px-4 py-2 rounded-md hover:bg-stone-50 text-sm font-medium transition whitespace-nowrap">Payroll</button>
-                    <button onclick="switchTab('advisory')" id="btn-advisory" class="tab-btn text-left px-4 py-2 rounded-md hover:bg-stone-50 text-sm font-medium transition whitespace-nowrap">HR & Recruiting</button>
+                    <button onclick="switchTab('payroll')" id="btn-payroll" class="tab-btn text-left px-4 py-2 rounded-md hover:bg-stone-50 text-sm font-medium transition whitespace-nowrap">Payroll & HR</button>
                     <button onclick="switchTab('consulting')" id="btn-consulting" class="tab-btn text-left px-4 py-2 rounded-md hover:bg-stone-50 text-sm font-medium transition whitespace-nowrap">Consulting & Formation</button>
                 </nav>
             </div>
@@ -101,6 +103,37 @@
                     <button onclick="resetQuote()" class="text-xs text-stone-400 hover:text-white underline">Reset</button>
                 </div>
 
+                <!-- Service Scope Accordion -->
+                <div class="bg-white text-stone-800 rounded-lg shadow-inner mb-6">
+                    <button id="accordion-toggle" onclick="toggleAccordion()" class="w-full text-left p-3 text-sm font-semibold flex justify-between items-center border-b border-stone-200 bg-stone-100 rounded-t-lg">
+                        <span>Before You Get Started - Service Scope</span>
+                        <span id="accordion-icon" class="transition transform rotate-0">&#9660;</span>
+                    </button>
+                    <div id="scope-accordion-content" class="accordion-content">
+                        <div class="p-3 text-xs space-y-3">
+                            <p class="font-bold">We specialize in straightforward tax, bookkeeping, and payroll. We do not serve:</p>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li>Revenue over $5 million</li>
+                                <li>Audited/Reviewed financial statements</li>
+                                <li>Private equity/VC backed businesses</li>
+                                <li>Publicly traded companies</li>
+                                <li>Foreign ownership/subsidiaries</li>
+                                <li>Complex international tax</li>
+                                <li>Ongoing IRS collections/litigation</li>
+                                <li>Large-scale crypto/DeFi projects</li>
+                            </ul>
+                            <p class="italic text-stone-600">Unsure? Continue and request a consultation; we'll review.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4 bg-white text-stone-800 rounded-lg p-3">
+                    <label class="flex items-center text-xs font-semibold">
+                        <input type="checkbox" id="scope-confirm" class="rounded text-forest-600" onchange="updateButtonState()">
+                        <span class="ml-2">I confirm my needs fall within the service scope.</span>
+                    </label>
+                </div>
+
                 <div class="mb-6">
                     <label class="block text-xs text-stone-400 mb-1">Have a discount code?</label>
                     <div class="flex gap-2">
@@ -108,7 +141,7 @@
                         <button onclick="applyDiscountCode()" class="bg-forest-600 hover:bg-forest-700 text-white text-xs font-bold px-3 py-2 rounded transition">Apply</button>
                         <button onclick="clearDiscountCode()" class="bg-stone-600 hover:bg-stone-700 text-white text-xs font-bold px-3 py-2 rounded transition">&times;</button>
                     </div>
-                    <p id="discount-feedback" class="text-xs mt-1 h-4"></p>
+                    <p id="discount-feedback" class="text-xs mt-1 h-auto min-h-[1rem]"></p>
                 </div>
 
                 <div id="selected-items" class="space-y-2 mb-6 max-h-60 overflow-y-auto pr-2 text-sm">
@@ -117,11 +150,11 @@
 
                 <div class="border-t border-navy-700 pt-4 space-y-2">
                     <div class="flex justify-between items-center">
-                        <span class="text-stone-300">One-Time / Annual</span>
+                        <span id="total-onetime-label" class="text-stone-300">One-Time / Annual</span>
                         <span id="total-onetime" class="font-bold text-xl">$0</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-stone-300">Monthly Recurring</span>
+                        <span id="total-monthly-label" class="text-stone-300">Monthly Recurring</span>
                         <span id="total-monthly" class="font-bold text-xl">$0</span>
                     </div>
                 </div>
@@ -133,92 +166,66 @@
                     </div>
                 </div>
 
-                <div class="mt-6">
-                    <button onclick="alert('In a real app, this would email your quote!')" class="w-full bg-forest-600 hover:bg-forest-700 text-white font-bold py-3 rounded transition shadow-md">
-                        Request This Package
+                <div class="mt-6 space-y-3">
+                    <button onclick="requestQuoteGmailOnly()" id="request-gmail-btn" disabled class="w-full bg-stone-600 cursor-not-allowed text-stone-400 font-bold py-3 rounded transition shadow-md flex justify-center items-center gap-2">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                         </svg>
+                        Request Quote via Gmail
                     </button>
+                    
+                    <div class="text-center">
+                        <button onclick="requestQuote('default')" id="request-package-btn" disabled class="text-xs text-stone-400 underline flex items-center justify-center gap-1 mx-auto cursor-not-allowed">
+                            Use Default Mail App (Outlook, Apple Mail)
+                        </button>
+                    </div>
                 </div>
             </div>
         </aside>
 
     </main>
 
-    <!-- About / Footer -->
-    <section id="about" class="bg-white border-t border-stone-200 py-12">
-        <div class="container mx-auto px-4 max-w-4xl text-center">
-            <h2 class="text-2xl font-bold text-navy-900 mb-4">Meet Ron</h2>
-            <div class="w-24 h-1 bg-forest-600 mx-auto mb-6"></div>
-            <p class="text-lg text-stone-600 mb-8">
-                I'm an auditor in public accounting with deep experience in commercial & real estate audits and financial analysis. 
-                I didn't just learn tax from software; I learned it by conducting compliance audits. 
-                I founded Hennig Financial to offer affordable, transparent support for real people.
-            </p>
-        </div>
-    </section>
-
+    <!-- DISCLAIMERS SECTION -->
     <footer id="contact" class="bg-navy-900 text-stone-400 py-8">
         <div class="container mx-auto px-4 text-center">
             <h3 class="text-white font-bold text-lg mb-2">Hennig Financial LLC</h3>
-            <p class="text-xs">&copy; 2025 Hennig Financial LLC. All rights reserved.</p>
+            <div class="max-w-3xl mx-auto space-y-4 text-xs text-stone-500 mt-6 border-t border-stone-800 pt-6">
+                <p>Hennig Financial LLC is not a CPA firm and is not a law firm. The owner holds an IRS Annual Filing Season Program (AFSP) Record of Completion. We do not provide legal services, audit services, or unrestricted tax representation.</p>
+            </div>
+            <p class="text-xs mt-6">&copy; 2025 Hennig Financial LLC. All rights reserved.</p>
         </div>
     </footer>
 
     <!-- Logic -->
     <script>
-        // --- CONSTANTS & DATA ---
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) { element.scrollIntoView({ behavior: 'smooth' }); }
+        }
         
         const servicesData = {
-            advisory: {
-                title: "HR & Recruiting Services",
-                intro: "Professional HR support, recruiting, and onboarding for small businesses.",
-                items: [
-                    { id: 'h1', name: "Job Description Creation", price: 125, type: 'onetime', cat: 'advisory', desc: "Professional job description with compensation analysis." },
-                    { id: 'h2', name: "Salary Benchmarking", price: 175, type: 'onetime', cat: 'advisory', desc: "Market research & competitor benchmarks." },
-                    { id: 'h3', name: "Candidate Screening", price: 150, type: 'onetime', cat: 'advisory', desc: "Resume review + phone screen + summary per candidate." },
-                    { id: 'h4', name: "Interview Support", price: 300, type: 'onetime', cat: 'advisory', desc: "Screening + structured interview + scorecard per candidate." },
-                    { id: 'h5', name: "Hiring Support Package", price: 500, type: 'onetime', cat: 'advisory', desc: "Full cycle support per role." },
-                    { id: 'h6', name: "New Hire Onboarding", price: 200, type: 'onetime', cat: 'advisory', desc: "I-9, W-4, payroll setup & first-week plan per hire." },
-                    { id: 'h7', name: "Employee Handbook", price: 400, type: 'onetime', cat: 'advisory', desc: "Custom small-business handbook creation." },
-                    { id: 'h8', name: "HR Advisory Retainer", price: 75, type: 'monthly', cat: 'advisory', desc: "Ongoing monthly support (Est. $50-$100/mo)." }
-                ]
+            tax: {}, bookkeeping: {},
+            payroll: {
+                title: "Payroll & HR Support",
+                intro: "Automated payroll management and advisory HR guidance.",
+                items: []
             },
             consulting: {
                 title: "Consulting & Formation",
                 intro: "Expert guidance on business structure, risk, and strategy.",
-                items: [
-                    { id: 'a1', name: "Internal Controls Review", price: 1199, type: 'onetime', cat: 'consulting', desc: "Project-based review to mitigate fraud risks." },
-                    { id: 'a5', name: "Business Entity Formation", price: 450, type: 'onetime', cat: 'consulting', desc: "Fixed fee for LLC/S-Corp registration (Excl. state fees)." },
-                    { id: 'c1', name: "Action Plan Session (60m)", price: 99, type: 'onetime', cat: 'consulting', desc: "Fixed-fee consultation: Requires pre-submitted materials." },
-                    { id: 'c2', name: "Ongoing Support Plan", price: 49, type: 'monthly', cat: 'consulting', desc: "Priority email/text support retainer." }
-                ]
+                items: []
             }
         };
 
         const discountRules = {
-            'none': { 
-                name: "Standard Rates", 
-                tax: 0, book_all: 0, book_mo_cap: false, all: 0, 
-                privateDesc: "Standard Rates (no discount)",
-                publicDesc: "Limited early client pricing may be available with an access code."
-            },
-            'FOUNDERS2026': { 
-                name: "Founders Rate", 
-                tax: 0.20, book_all: 0.20, book_mo_cap: true, all: 0,
-                privateDesc: "Founders Rate applied: 20% off tax and bookkeeping services for your first 3 months.",
-                publicDesc: "Limited early client pricing may be available with an access code."
-            },
-            'PRIDE15': { 
-                name: "LGBTQ+ Community", 
-                tax: 0.15, book_all: 0, book_mo_cap: false, all: 0,
-                privateDesc: "LGBTQ+ Community Discount applied.",
-                publicDesc: "Certain community discounts may be available with an access code."
-            },
-            'HENNIGFAM': { 
-                name: "Family & Friends", 
-                tax: 0, book_all: 0, book_mo_cap: false, all: 0.25, 
-                privateDesc: "Family & Friends Discount applied.",
-                publicDesc: "Private discount available only with an access code."
-            }
+            'none': { tax: 0, book_all: 0, book_mo_cap: false, all: 0, privateDesc: "Standard Rates", publicDesc: "Limited pricing available with code." },
+            'FOUNDERS2026': { tax: 0.15, book_all: 0.15, book_mo_cap: true, all: 0, privateDesc: "Founders Rate: 15% off tax/bookkeeping (3mo).", publicDesc: "" },
+            'PRIDE15': { tax: 0.15, book_all: 0, book_mo_cap: false, all: 0, privateDesc: "LGBTQ+ Discount: 15% off tax.", publicDesc: "" },
+            'DISABILITY': { tax: 0.15, book_all: 0, book_mo_cap: false, all: 0, privateDesc: "Disability Community Discount: 15% off tax.", publicDesc: "" },
+            'VETERANS': { tax: 0.15, book_all: 0, book_mo_cap: false, all: 0, privateDesc: "Veteran Discount: 15% off tax.", publicDesc: "" },
+            'WOMENOWNED': { tax: 0.15, book_all: 0, book_mo_cap: false, all: 0, privateDesc: "Women-Owned Discount: 15% off tax.", publicDesc: "" },
+            'HENNIGFAM': { tax: 0, book_all: 0, book_mo_cap: false, all: 0.25, privateDesc: "Family Discount: 25% off all.", publicDesc: "" },
+            'LOCALBIZ': { tax: 0.10, book_all: 0.10, book_mo_cap: true, all: 0, privateDesc: "Local Biz: 10% off.", publicDesc: "" }
         };
 
         let currentTab = 'tax';
@@ -226,7 +233,29 @@
         let currentDiscountCode = 'none';
         let quoteChart = null;
 
-        // --- RENDER LOGIC ---
+        function toggleAccordion() {
+            document.getElementById('scope-accordion-content').classList.toggle('open');
+            document.getElementById('accordion-icon').classList.toggle('rotate-180');
+        }
+
+        function updateButtonState() {
+            const isConfirmed = document.getElementById('scope-confirm').checked;
+            const gmailBtn = document.getElementById('request-gmail-btn');
+            const defBtn = document.getElementById('request-package-btn');
+            
+            gmailBtn.disabled = !isConfirmed;
+            gmailBtn.classList.toggle('bg-forest-600', isConfirmed);
+            gmailBtn.classList.toggle('hover:bg-forest-700', isConfirmed);
+            gmailBtn.classList.toggle('bg-stone-600', !isConfirmed);
+            gmailBtn.classList.toggle('cursor-not-allowed', !isConfirmed);
+            gmailBtn.classList.toggle('text-white', isConfirmed);
+            gmailBtn.classList.toggle('text-stone-400', !isConfirmed);
+
+            defBtn.disabled = !isConfirmed;
+            defBtn.classList.toggle('text-stone-400', !isConfirmed);
+            defBtn.classList.toggle('hover:text-white', isConfirmed);
+            defBtn.classList.toggle('cursor-not-allowed', !isConfirmed);
+        }
 
         function switchTab(tabId) {
             currentTab = tabId;
@@ -239,466 +268,576 @@
 
         function renderContent(tabId) {
             const container = document.getElementById('content-area');
-            
-            if (tabId === 'tax') {
-                renderTaxTab(container);
-            } else if (tabId === 'bookkeeping') {
-                renderBookkeepingTab(container);
-            } else if (tabId === 'payroll') {
-                renderPayrollTab(container);
-            } else {
-                renderGenericTab(container, tabId);
-            }
+            if (tabId === 'tax') renderTaxTab(container);
+            else if (tabId === 'bookkeeping') renderBookkeepingTab(container);
+            else if (tabId === 'payroll') renderPayrollTab(container);
+            else if (tabId === 'consulting') renderConsultingTab(container);
         }
 
-        // --- SPECIFIC TAB RENDERERS ---
-
         function renderTaxTab(container) {
-            let html = `
+            container.innerHTML = `
                 <div class="bg-white rounded-lg shadow-sm p-6 animate-fade-in">
                     <h2 class="text-2xl font-bold text-navy-900 mb-2">Tax Preparation</h2>
-                    <p class="text-stone-600 mb-6 border-b border-stone-200 pb-4">Accurate, affordable, and transparent tax preparation. We focus on complexity-based pricing.</p>
+                    <p class="text-stone-600 mb-6 border-b border-stone-200 pb-4">Accurate, affordable, and transparent tax preparation.</p>
                     <div class="grid grid-cols-1 gap-4">
-            `;
-
-            // 1. Simple Individual (Revised)
-            html += `
-                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
-                    <h3 class="font-bold text-navy-900 mb-2">Simple Individual Return</h3>
-                    <p class="text-sm text-stone-500 mb-3">Base Price: $225 (W-2 only, standard deduction)</p>
-                    <div class="space-y-2 mb-3">
-                        <label class="flex items-center gap-2 text-sm text-stone-700">
-                            <input type="checkbox" id="chk_mfj" class="rounded text-forest-600"> Married Filing Jointly (+$30)
-                        </label>
-                        <label class="flex items-center gap-2 text-sm text-stone-700">
-                            <input type="checkbox" id="chk_scha" class="rounded text-forest-600"> Itemized Deductions (Sch A) (+$75)
-                        </label>
-                    </div>
-                    <button onclick="addSimpleReturn()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Return</button>
-                </div>
-            `;
-
-            // 2. Schedule C (Business Complexity)
-            html += `
-                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
-                    <h3 class="font-bold text-navy-900 mb-2">Business / Sole Proprietor (Sch C)</h3>
-                    <div class="space-y-3">
-                        <select id="sel_sch_c" class="w-full text-sm border-stone-300 rounded p-2 bg-stone-50">
-                            <option value="299">Very Simple (+$299) - Clean, no inventory/employees</option>
-                            <option value="399">Standard (+$399) - Multiple expenses/income</option>
-                            <option value="499">Complex (+$499) - High volume, cash-heavy</option>
-                        </select>
-                        <div class="flex items-center gap-2">
-                            <input type="checkbox" id="chk_sch_c_clean" class="rounded text-forest-600">
-                            <label for="chk_sch_c_clean" class="text-sm text-stone-600">My books need cleanup (+$100)</label>
+                        <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
+                            <h3 class="font-bold text-navy-900 mb-2">Simple Individual Return</h3>
+                            <p class="text-sm text-stone-500 mb-3">Base Price: $225</p>
+                            <div class="bg-stone-50 p-3 rounded mb-3 text-xs text-stone-600">
+                                <span class="font-bold text-navy-900">Includes:</span>
+                                <ul class="list-disc pl-4 mt-1 space-y-1">
+                                    <li>Married Filing Jointly & Standard Deduction</li>
+                                    <li>Simple Itemizing (Mortgage, SALT, Charity)</li>
+                                    <li>Student Loan Interest (1098-E)</li>
+                                    <li>Standard Child Tax & Education Credits</li>
+                                </ul>
+                            </div>
+                            <div class="mb-3">
+                                <label class="flex items-center gap-2 text-sm text-stone-700 font-semibold">
+                                    <input type="checkbox" id="chk_scha_complex" class="rounded text-forest-600"> 
+                                    Complex Itemizing (+$75)
+                                </label>
+                                <p class="text-[10px] text-stone-500 ml-6">Medical, Casualty/Theft, K-1 Passthrough, Multi-source tracking.</p>
+                            </div>
+                            <button onclick="addSimpleReturn()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Return</button>
                         </div>
-                        <button onclick="addScheduleC()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Business Return</button>
+                        
+                        <div class="border-t border-stone-200 pt-4 mt-2">
+                            <h3 class="text-sm font-bold text-navy-900 uppercase tracking-wider mb-3 ml-1">Add-ons</h3>
+                            <div class="pl-4 border-l-4 border-stone-200 space-y-4">
+                                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
+                                    <h3 class="font-bold text-navy-900 text-sm mb-1">State Tax Returns</h3>
+                                    <select id="sel_states" class="w-full text-sm border-stone-300 rounded p-2 bg-stone-50 mb-3">
+                                        <option value="75">1 State ($75)</option>
+                                        <option value="150">2 States ($150)</option>
+                                        <option value="225">3 States ($225)</option>
+                                        <option value="custom">4+ States (Custom)</option>
+                                    </select>
+                                    <button onclick="addStates()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add State Fees</button>
+                                </div>
+                                
+                                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
+                                    <h3 class="font-bold text-navy-900 text-sm mb-1">Business / Sole Proprietor (Sch C)</h3>
+                                    <select id="sel_sch_c" class="w-full text-sm border-stone-300 rounded p-2 bg-stone-50 mb-3">
+                                        <option value="300">Very Simple (+$300)</option>
+                                        <option value="400">Standard (+$400)</option>
+                                        <option value="500">Complex (+$500)</option>
+                                    </select>
+                                    <label class="flex items-center gap-2 text-sm text-stone-600 mb-3"><input type="checkbox" id="chk_sch_c_clean" class="rounded text-forest-600"> My books need cleanup (+$100)</label>
+                                    <button onclick="addScheduleC()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Business Return</button>
+                                </div>
+                                
+                                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
+                                    <h3 class="font-bold text-navy-900 text-sm mb-1">Interest & Dividends</h3>
+                                    <p class="text-xs text-stone-500 mb-2">1099-INT / 1099-DIV</p>
+                                    <select id="sel_int_div" class="w-full text-sm border-stone-300 rounded p-2 bg-stone-50 mb-3">
+                                        <option value="40">1-2 Sources ($40)</option>
+                                        <option value="50">3+ Sources ($50)</option>
+                                    </select>
+                                    <button onclick="addInterestDividends()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Interest/Dividends</button>
+                                </div>
+                                
+                                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
+                                    <h3 class="font-bold text-navy-900 text-sm mb-1">Stock/Crypto (1099-B)</h3>
+                                    <select id="sel_1099b" class="w-full text-sm border-stone-300 rounded p-2 bg-stone-50 mb-3">
+                                        <option value="50">1-25 trades (+$50)</option>
+                                        <option value="100">26-200 trades (+$100)</option>
+                                        <option value="custom">200+ trades (Custom)</option>
+                                    </select>
+                                    <button onclick="add1099B()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add 1099-B Fees</button>
+                                </div>
+                                
+                                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
+                                    <h3 class="font-bold text-navy-900 text-sm mb-1">Rentals (Sch E)</h3>
+                                    <select id="sel_rentals" class="w-full text-sm border-stone-300 rounded p-2 bg-stone-50 mb-3">
+                                        <option value="125">1 Property (+$125)</option>
+                                        <option value="200">2-3 Properties (+$200)</option>
+                                        <option value="custom">4+ Properties (Custom)</option>
+                                    </select>
+                                    <button onclick="addRentals()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Rental Fees</button>
+                                </div>
+                                
+                                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
+                                    <h3 class="font-bold text-navy-900 text-sm mb-1">ITIN Application (W-7)</h3>
+                                    <div class="flex gap-4 mb-3 text-sm">
+                                        <label><input type="radio" name="itin_pp" value="yes" checked> w/ Passport ($125)</label>
+                                        <label><input type="radio" name="itin_pp" value="no"> No Passport (+$50)</label>
+                                    </div>
+                                    <button onclick="addITIN()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add ITIN Service</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-sm font-bold text-navy-900 uppercase tracking-wider mt-6 mb-2">Entity & Nonprofit Returns</h3>
+                        <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
+                            <h3 class="font-bold text-navy-900 mb-2">Nonprofit Tax (990)</h3>
+                            <select id="sel_nonprofit" class="w-full text-sm border-stone-300 rounded p-2 bg-stone-50 mb-3">
+                                <option value="100">990-N (e-Postcard) - $100</option>
+                                <option value="450">990-EZ (Short Form) - $450</option>
+                                <option value="700">990 (Full) - $700</option>
+                                <option value="custom">Complex/High Rev - Custom</option>
+                            </select>
+                            <button onclick="addNonprofit()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Nonprofit Tax</button>
+                        </div>
+                        
+                        <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
+                            <h3 class="font-bold text-navy-900 mb-2">Partnership Tax (1065)</h3>
+                            <span class="bg-stone-100 text-navy-800 text-xs font-bold px-2 py-1 rounded mb-3 inline-block">Fixed Fee: $800</span>
+                            <p class="text-xs text-stone-500 mb-2">Includes up to 3 partners, &lt;$1.5M Rev, Single State.</p>
+                            <button onclick="addDirectItem('t4_part', 'Partnership Tax (1065)', 800, 'onetime', 'tax')" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Partnership Tax</button>
+                        </div>
+                        
+                        <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
+                            <h3 class="font-bold text-navy-900 mb-2">S Corp Tax (1120-S)</h3>
+                            <span class="bg-stone-100 text-navy-800 text-xs font-bold px-2 py-1 rounded mb-3 inline-block">Fixed Fee: $800</span>
+                            <p class="text-xs text-stone-500 mb-2">Includes &lt;$1.5M Rev, Single State, Clean Books.</p>
+                            <button onclick="addDirectItem('t4_scorp', 'S Corp Tax (1120-S)', 800, 'onetime', 'tax')" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add S Corp Tax</button>
+                        </div>
+                        
+                        <div class="service-card bg-white border border-stone-200 rounded-lg p-4 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-navy-900 mb-1">Tax Planning Session</h3>
+                                <p class="text-sm text-stone-500 mb-3">Dedicated consultation for proactive strategies.</p>
+                            </div>
+                            <button onclick="addDirectItem('t7', 'Tax Planning Session', 200, 'onetime', 'tax')" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add ($200)</button>
+                        </div>
                     </div>
-                </div>
-            `;
-
-            // 3. 1099-B (Stocks/Crypto)
-            html += `
-                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
-                    <h3 class="font-bold text-navy-900 mb-2">Investments (Stocks/Crypto)</h3>
-                    <label class="text-xs text-stone-500 block mb-1">How many trades did you have?</label>
-                    <select id="sel_1099b" class="w-full text-sm border-stone-300 rounded p-2 bg-stone-50 mb-3">
-                        <option value="50">1–25 trades (+$50)</option>
-                        <option value="100">26–200 trades (+$100)</option>
-                        <option value="custom">200+ trades (Custom Quote)</option>
-                    </select>
-                    <button onclick="add1099B()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Investment Fees</button>
-                </div>
-            `;
-
-            // 4. Rental Properties
-            html += `
-                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
-                    <h3 class="font-bold text-navy-900 mb-2">Rental Properties (Sch E)</h3>
-                    <label class="text-xs text-stone-500 block mb-1">How many properties?</label>
-                    <select id="sel_rentals" class="w-full text-sm border-stone-300 rounded p-2 bg-stone-50 mb-3">
-                        <option value="125">1 Property (+$125)</option>
-                        <option value="200">2–3 Properties (+$200)</option>
-                        <option value="custom">4+ Properties (Custom Quote)</option>
-                    </select>
-                    <button onclick="addRentals()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Rental Fees</button>
-                </div>
-            `;
-
-            // 5. State Returns (Logic Updated)
-            html += `
-                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
-                    <h3 class="font-bold text-navy-900 mb-2">State Tax Returns</h3>
-                    <label class="text-xs text-stone-500 block mb-1">How many states do you need to file?</label>
-                    <select id="sel_states" class="w-full text-sm border-stone-300 rounded p-2 bg-stone-50 mb-3">
-                        <option value="75">1 State ($75)</option>
-                        <option value="150">2 States ($150)</option>
-                        <option value="225">3 States ($225)</option>
-                        <option value="custom">4+ States (Custom Quote)</option>
-                    </select>
-                    <button onclick="addStates()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add State Fees</button>
-                </div>
-            `;
-
-             // 6. ITIN
-             html += `
-                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
-                    <h3 class="font-bold text-navy-900 mb-2">ITIN Application (W-7)</h3>
-                    <label class="text-xs text-stone-500 block mb-1">Do you have a valid passport?</label>
-                    <div class="flex gap-4 mb-3">
-                        <label class="flex items-center gap-2 text-sm"><input type="radio" name="itin_pp" value="yes" checked> Yes ($125)</label>
-                        <label class="flex items-center gap-2 text-sm"><input type="radio" name="itin_pp" value="no"> No (+$50)</label>
-                    </div>
-                    <button onclick="addITIN()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add ITIN Service</button>
-                </div>
-            `;
-            
-            // Partnership/S-Corp (Static)
-            html += renderTaxCard({
-                id: 't4', title: 'Partnership/S-Corp Tax', price: 799, 
-                desc: 'Fixed fee for Form 1065 or 1120-S: Under $500k gross receipts.',
-                btnAction: `addDirectItem('t4', 'Partnership/S-Corp Tax', 799, 'onetime', 'tax')`
-            });
-
-             // Tax Planning (Static)
-             html += renderTaxCard({
-                id: 't7', title: 'Tax Planning Session', price: 199, 
-                desc: 'Dedicated consultation for proactive strategies.',
-                btnAction: `addDirectItem('t7', 'Tax Planning Session', 199, 'onetime', 'tax')`
-            });
-
-            html += `</div></div>`;
-            container.innerHTML = html;
+                </div>`;
         }
 
         function renderBookkeepingTab(container) {
-            let html = `
+            container.innerHTML = `
                 <div class="bg-white rounded-lg shadow-sm p-6 animate-fade-in">
-                    <h2 class="text-2xl font-bold text-navy-900 mb-2">Bookkeeping Services</h2>
-                    <p class="text-stone-600 mb-6 border-b border-stone-200 pb-4">Audit-Ready transactions and accurate monthly reporting.</p>
+                    <h2 class="text-2xl font-bold text-navy-900 mb-2">Fully Managed Bookkeeping</h2>
+                    <div class="text-xs text-forest-600 font-bold mb-4">Integrated with Tax & Payroll</div>
+                    <p class="text-stone-600 mb-6 border-b border-stone-200 pb-4">Clean, reconciled, tax-ready financials — maintained monthly inside our system (Drake) or QuickBooks Online. Flat-rate pricing based on volume and complexity.</p>
                     
-                    <div class="md:col-span-2 mb-4 bg-stone-50 p-4 rounded-lg border border-stone-200">
-                        <h4 class="text-sm font-bold text-navy-800 mb-2">Package Comparison</h4>
-                        <div class="chart-container" style="height: 200px;"><canvas id="bookkeepingChart"></canvas></div>
+                    <!-- Bookkeeping Tiers -->
+                    <div class="md:col-span-2 bg-stone-50 p-4 rounded-lg border border-stone-200 mb-6">
+                        <h3 class="font-bold text-navy-900 mb-3 text-lg">Monthly Bookkeeping Tiers</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Starter -->
+                            <div class="bg-white p-4 rounded border border-stone-300 flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-navy-800 mb-1">Starter</h4>
+                                    <div class="text-2xl font-bold text-forest-600 mb-2">$95<span class="text-sm font-normal text-stone-500">/mo</span></div>
+                                    <p class="text-xs text-stone-500 mb-2 font-semibold">Best for: Solo owners, low volume.</p>
+                                    <ul class="text-xs text-stone-600 space-y-1 mb-4 list-disc pl-3">
+                                        <li>~50 transactions/mo</li>
+                                        <li>Bank/CC Reconciliation</li>
+                                        <li>P&L + Tax Export</li>
+                                    </ul>
+                                </div>
+                                <button onclick="addBookkeepingTier('b_start', 'Starter Bookkeeping', 95)" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-xs font-bold py-2 rounded transition">Add Starter</button>
+                            </div>
+
+                            <!-- Core -->
+                            <div class="bg-white p-4 rounded border-2 border-navy-800 relative flex flex-col justify-between shadow-md">
+                                <div class="absolute top-0 right-0 bg-navy-800 text-white text-[10px] font-bold px-2 py-1 rounded-bl">MOST CLIENTS</div>
+                                <div>
+                                    <h4 class="font-bold text-navy-800 mb-1">Core</h4>
+                                    <div class="text-2xl font-bold text-forest-600 mb-2">$150<span class="text-sm font-normal text-stone-500">/mo</span></div>
+                                    <p class="text-xs text-stone-500 mb-2 font-semibold">Best for: Contractors, Salons, 1-5 emp.</p>
+                                    <ul class="text-xs text-stone-600 space-y-1 mb-4 list-disc pl-3">
+                                        <li>~150 transactions/mo</li>
+                                        <li>Payroll JE + Balance Sheet</li>
+                                        <li>Quarterly Review</li>
+                                    </ul>
+                                </div>
+                                <button onclick="addBookkeepingTier('b_core', 'Core Bookkeeping', 150)" class="w-full bg-forest-600 hover:bg-forest-700 text-white text-xs font-bold py-2 rounded transition">Add Core</button>
+                            </div>
+
+                            <!-- Advanced -->
+                            <div class="bg-white p-4 rounded border border-stone-300 flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-navy-800 mb-1">Advanced</h4>
+                                    <div class="text-2xl font-bold text-forest-600 mb-2">$250<span class="text-sm font-normal text-stone-500">/mo</span></div>
+                                    <p class="text-xs text-stone-500 mb-2 font-semibold">Best for: High vol, tipped, complex.</p>
+                                    <ul class="text-xs text-stone-600 space-y-1 mb-4 list-disc pl-3">
+                                        <li>~300 transactions/mo</li>
+                                        <li>Multi-account + 1099s</li>
+                                        <li>Priority Support</li>
+                                    </ul>
+                                </div>
+                                <button onclick="addBookkeepingTier('b_adv', 'Advanced Bookkeeping', 250)" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-xs font-bold py-2 rounded transition">Add Advanced</button>
+                            </div>
+                        </div>
+                        <div class="text-xs text-stone-500 mt-3 italic text-center">
+                            Custom Quote required for 300+ trans, multi-entity, inventory/COGS, or prior-year corrections.
+                        </div>
                     </div>
 
+                    <!-- Modifiers -->
+                    <div class="md:col-span-2 bg-stone-50 p-4 rounded-lg border border-stone-200 mb-6">
+                        <h3 class="font-bold text-navy-900 mb-3 text-sm uppercase">Complexity Modifiers (Monthly)</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                            <label class="flex items-center gap-2 p-2 bg-white rounded border border-stone-200 cursor-pointer hover:bg-stone-50">
+                                <input type="checkbox" id="bk_qbo" class="rounded text-forest-600"> 
+                                <span>QBO/External Software (+$25)</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 bg-white rounded border border-stone-200 cursor-pointer hover:bg-stone-50">
+                                <input type="checkbox" id="bk_sales_tax" class="rounded text-forest-600"> 
+                                <span>Sales Tax Filing (+$25)</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 bg-white rounded border border-stone-200 cursor-pointer hover:bg-stone-50">
+                                <input type="checkbox" id="bk_tipped" class="rounded text-forest-600"> 
+                                <span>Tipped/Cash Heavy (+$25)</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 bg-white rounded border border-stone-200 cursor-pointer hover:bg-stone-50">
+                                <input type="checkbox" id="bk_contractor" class="rounded text-forest-600"> 
+                                <span>Contractor Mgmt (+$25)</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 bg-white rounded border border-stone-200 cursor-pointer hover:bg-stone-50">
+                                <input type="checkbox" id="bk_accounts" class="rounded text-forest-600"> 
+                                <span>Extra Accounts (+$25)</span>
+                            </label>
+                        </div>
+                        <button onclick="addBookkeepingExtras()" class="w-full mt-4 bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Update Modifiers</button>
+                    </div>
+
+                    <!-- One-Time Fees -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            `;
-
-            // 1. Cleanup (Logic Based)
-            html += `
-                <div class="service-card bg-white border border-stone-200 rounded-lg p-4 flex flex-col justify-between">
-                    <div>
-                        <h3 class="font-bold text-navy-900 mb-1">Initial Audit & Clean-Up</h3>
-                        <p class="text-sm text-stone-500 mb-3">Required for new clients.</p>
-                        <label class="text-xs text-stone-500 block mb-1">How far back are your books messy?</label>
-                        <select id="sel_cleanup" class="w-full text-sm border-stone-300 rounded p-2 bg-stone-50 mb-3">
-                            <option value="350">1–3 months ($350)</option>
-                            <option value="500">4–6 months ($500)</option>
-                            <option value="650">7–12 months ($650)</option>
-                            <option value="custom">12+ months (Custom)</option>
-                        </select>
+                        <div class="service-card bg-white border border-stone-200 rounded-lg p-4 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-navy-900 mb-1">Initial Audit & Clean-Up</h3>
+                                <p class="text-sm text-stone-500 mb-3">Required if books are behind.</p>
+                                <select id="sel_cleanup" class="w-full text-sm border-stone-300 rounded p-2 bg-stone-50 mb-3">
+                                    <option value="200">Tier 1 ($200): 1-2 mos, &lt;100 trans</option>
+                                    <option value="375">Tier 2 ($375): 3-6 mos, mixed trans</option>
+                                    <option value="800">Tier 3 ($800): 6-12 mos, complex</option>
+                                    <option value="custom">Extreme (Custom)</option>
+                                </select>
+                            </div>
+                            <button onclick="addCleanup()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Cleanup</button>
+                        </div>
+                        <div class="service-card bg-white border border-stone-200 rounded-lg p-4 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-navy-900 mb-1">System Setup</h3>
+                                <p class="text-sm text-stone-500 mb-3">Chart of Accounts & Onboarding.</p>
+                            </div>
+                            <button onclick="addDirectItem('b2', 'Bookkeeping System Setup', 200, 'onetime', 'bookkeeping')" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add ($200)</button>
+                        </div>
                     </div>
-                    <button onclick="addCleanup()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Cleanup</button>
                 </div>
             `;
-
-            // Static Bookkeeping Items
-            const items = [
-                { id: 'b2', name: "QuickBooks Setup", price: 200, type: 'onetime', desc: "Custom Chart of Accounts & Onboarding." },
-                { id: 'b3', name: "Start-Up Essentials (Mo)", price: 199, type: 'monthly', desc: "<75 transactions, 1-2 accounts." },
-                { id: 'b4', name: "Growth Standard (Mo)", price: 349, type: 'monthly', desc: "75-150 transactions, 3-4 accounts." },
-                { id: 'b5', name: "Audit-Ready Premier (Mo)", price: 499, type: 'monthly', desc: "150+ trans, Accruals, Compliance." },
-                { id: 'b6', name: "Accrual Conversion", price: 800, type: 'onetime', desc: "Transition from cash to accrual." }
-            ];
-
-            items.forEach(item => {
-                html += renderTaxCard({
-                    id: item.id, title: item.name, price: item.price, desc: item.desc,
-                    btnAction: `addDirectItem('${item.id}', '${item.name}', ${item.price}, '${item.type}', 'bookkeeping')`,
-                    monthly: item.type === 'monthly'
-                });
-            });
-
-            html += `</div></div>`;
-            container.innerHTML = html;
-            setTimeout(initBookkeepingChart, 100);
         }
 
         function renderPayrollTab(container) {
-            let html = `
+            container.innerHTML = `
                 <div class="bg-white rounded-lg shadow-sm p-6 animate-fade-in">
-                    <h2 class="text-2xl font-bold text-navy-900 mb-2">Payroll Services</h2>
-                    <p class="text-stone-600 mb-6 border-b border-stone-200 pb-4">Flat-rate tiers with simple complexity add-ons.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            `;
-
-            // Automated Payroll
-            html += `
-                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-bold text-navy-900">Automated Payroll</h3>
-                        <span class="bg-stone-100 text-navy-800 text-xs font-bold px-2 py-1 rounded">$75/mo</span>
-                    </div>
-                    <p class="text-sm text-stone-500 mb-4">Up to 3 employees, one pay freq, no tips/garnishments.</p>
-                    <button onclick="addDirectItem('p_auto', 'Automated Payroll (Base)', 75, 'monthly', 'payroll')" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Base Plan</button>
-                </div>
-            `;
-
-            // Hybrid Payroll
-            html += `
-                <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-bold text-navy-900">Hybrid Payroll</h3>
-                        <span class="bg-stone-100 text-navy-800 text-xs font-bold px-2 py-1 rounded">$125/mo</span>
-                    </div>
-                    <p class="text-sm text-stone-500 mb-4">Up to 5 employees, tips, manual hours, inside client software.</p>
-                    <button onclick="addDirectItem('p_hybrid', 'Hybrid Payroll (Base)', 125, 'monthly', 'payroll')" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Base Plan</button>
-                </div>
-            `;
-
-            // Complexity Add-ons
-            html += `
-                <div class="md:col-span-2 bg-stone-50 p-4 rounded-lg border border-stone-200 mt-2">
-                    <h3 class="font-bold text-navy-900 mb-3">Payroll Add-Ons & Complexity</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                        
-                        <!-- Monthly Add-ons -->
-                        <div class="space-y-2">
-                            <h4 class="font-bold text-stone-600 text-xs uppercase">Monthly Add-ons</h4>
-                            <div class="flex items-center justify-between">
-                                <span>Add'l Employees ($10/ea)</span>
-                                <input type="number" id="pay_add_emp" class="w-16 p-1 border rounded" min="0" value="0">
+                    <h2 class="text-2xl font-bold text-navy-900 mb-2">Payroll & HR Services</h2>
+                    <p class="text-stone-600 mb-6 border-b border-stone-200 pb-4">Flat-rate payroll tiers plus expert advisory HR support.</p>
+                    <div class="md:col-span-2 bg-stone-100 p-4 rounded-lg border border-navy-800 mb-4">
+                        <h3 class="font-bold text-lg text-navy-900 mb-3">Fully Managed Payroll (Via Drake Software)</h3>
+                        <p class="text-sm text-stone-600 mb-4">Includes processing, tax filings (941/W-2s), direct deposit. **No separate client software subscription required.**</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-white p-4 rounded border border-stone-300 flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-navy-800 mb-1">Starter</h4>
+                                    <div class="text-xl font-bold text-forest-600 mb-2">$95<span class="text-sm font-normal text-stone-500">/mo</span></div>
+                                    <ul class="text-xs text-stone-600 space-y-1 mb-4 list-disc pl-3"><li>1-2 employees</li><li>Single state</li><li>Filings included</li></ul>
+                                </div>
+                                <button onclick="addDirectItem('p_drake_starter', 'Drake Payroll: Starter (Mo)', 95, 'monthly', 'payroll')" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-xs font-bold py-2 rounded transition">Add Starter</button>
                             </div>
-                            <div class="flex items-center justify-between">
-                                <span>Contractors ($10/ea)</span>
-                                <input type="number" id="pay_contractor" class="w-16 p-1 border rounded" min="0" value="0">
+                            <div class="bg-white p-4 rounded border-2 border-navy-800 relative flex flex-col justify-between shadow-md">
+                                <div class="absolute top-0 right-0 bg-navy-800 text-white text-[10px] font-bold px-2 py-1 rounded-bl">RECOMMENDED</div>
+                                <div>
+                                    <h4 class="font-bold text-navy-800 mb-1">Core</h4>
+                                    <div class="text-xl font-bold text-forest-600 mb-2">$150<span class="text-sm font-normal text-stone-500">/mo</span></div>
+                                    <ul class="text-xs text-stone-600 space-y-1 mb-4 list-disc pl-3"><li>3-6 employees</li><li>PTO tracking</li><li>Enhanced review</li></ul>
+                                </div>
+                                <button onclick="addDirectItem('p_drake_core', 'Drake Payroll: Core (Mo)', 150, 'monthly', 'payroll')" class="w-full bg-forest-600 hover:bg-forest-700 text-white text-xs font-bold py-2 rounded transition">Add Core</button>
                             </div>
-                            <div class="flex items-center justify-between">
-                                <span>Multi-State ($25/state)</span>
-                                <input type="number" id="pay_state" class="w-16 p-1 border rounded" min="0" value="0">
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" id="pay_tips" class="rounded"> Tips/Cash Heavy (+$25/mo)
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" id="pay_garn" class="rounded"> Garnishments (+$10/mo)
-                            </div>
-                        </div>
-
-                        <!-- One-Time / Per Run -->
-                        <div class="space-y-2">
-                            <h4 class="font-bold text-stone-600 text-xs uppercase">Fees & Setup</h4>
-                            <div class="flex items-center justify-between">
-                                <span>Setup Fee</span>
-                                <select id="pay_setup" class="p-1 border rounded text-xs">
-                                    <option value="0">None</option>
-                                    <option value="150">Basic ($150)</option>
-                                    <option value="250">Standard ($250)</option>
-                                    <option value="350">Complex ($350)</option>
-                                </select>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span>Off-Cycle Runs ($25/ea)</span>
-                                <input type="number" id="pay_run" class="w-16 p-1 border rounded" min="0" value="0">
-                            </div>
-                             <div class="flex items-center justify-between">
-                                <span>Amendments ($50/ea)</span>
-                                <input type="number" id="pay_amend" class="w-16 p-1 border rounded" min="0" value="0">
+                            <div class="bg-white p-4 rounded border border-stone-300 flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-navy-800 mb-1">Advanced</h4>
+                                    <div class="text-xl font-bold text-forest-600 mb-2">$300<span class="text-sm font-normal text-stone-500">/mo</span></div>
+                                    <ul class="text-xs text-stone-600 space-y-1 mb-4 list-disc pl-3"><li>7-15 employees</li><li>Tips/Commissions</li><li>Priority support</li></ul>
+                                </div>
+                                <button onclick="addDirectItem('p_drake_advanced', 'Drake Payroll: Advanced (Mo)', 300, 'monthly', 'payroll')" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-xs font-bold py-2 rounded transition">Add Advanced</button>
                             </div>
                         </div>
                     </div>
-                    <button onclick="addPayrollExtras()" class="w-full bg-forest-600 hover:bg-forest-700 text-white text-sm font-bold py-2 rounded transition mt-4">Add Selected Payroll Extras</button>
-                </div>
-            `;
-
-            html += `</div></div>`;
-            container.innerHTML = html;
+                    <div class="md:col-span-2 service-card bg-white border border-stone-200 rounded-lg p-4 mb-4">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-navy-900">Payroll Setup Fee</h3>
+                            <span class="bg-stone-100 text-navy-800 text-xs font-bold px-2 py-1 rounded">$200</span>
+                        </div>
+                        <p class="text-sm text-stone-500 mb-3">System config, YTD imports, registrations.</p>
+                        <button onclick="addDirectItem('p_setup_drake', 'Drake Payroll Setup Fee', 200, 'onetime', 'payroll')" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Setup Fee</button>
+                    </div>
+                    <div class="md:col-span-2 bg-stone-50 p-4 rounded-lg border border-stone-200 mt-2 mb-4">
+                        <h3 class="font-bold text-navy-900 mb-3">Drake Payroll Add-Ons</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                            <div class="space-y-2">
+                                <h4 class="font-bold text-stone-600 text-xs uppercase">Monthly (Beyond Tier)</h4>
+                                <div class="flex justify-between items-center"><span>Add'l Emp ($15/ea)</span><input type="number" id="pay_add_emp_drake" class="w-12 p-1 border rounded" min="0" value="0"></div>
+                                <div class="flex justify-between items-center"><span>Multi-State ($25/st)</span><input type="number" id="pay_state_drake" class="w-12 p-1 border rounded" min="0" value="0"></div>
+                                <div class="flex gap-2"><input type="checkbox" id="pay_tipped_drake"> Tipped/Cash Heavy (+$25)</div>
+                                <div class="flex gap-2"><input type="checkbox" id="pay_garn_drake"> Garnishment (+$25)</div>
+                            </div>
+                            <div class="space-y-2">
+                                <h4 class="font-bold text-stone-600 text-xs uppercase">One-Time Fees</h4>
+                                <div class="flex justify-between items-center"><span>Off-Cycle ($25)</span><input type="number" id="pay_run_drake" class="w-12 p-1 border rounded" min="0" value="0"></div>
+                                <div class="flex justify-between items-center"><span>Amendments ($50)</span><input type="number" id="pay_amend_drake" class="w-12 p-1 border rounded" min="0" value="0"></div>
+                                <div class="flex justify-between items-center"><span>Checks ($10)</span><input type="number" id="pay_check_drake" class="w-12 p-1 border rounded" min="0" value="0"></div>
+                                <div class="flex justify-between items-center"><span>Notices ($125)</span><input type="number" id="pay_notice_drake" class="w-12 p-1 border rounded" min="0" value="0"></div>
+                            </div>
+                        </div>
+                        <button onclick="addDrakePayrollExtras()" class="w-full bg-forest-600 hover:bg-forest-700 text-white text-sm font-bold py-2 rounded transition mt-4">Add Drake Extras</button>
+                    </div>
+                    <div class="md:col-span-2 bg-white p-4 rounded-lg border border-stone-200 mt-4">
+                        <h3 class="font-bold text-navy-900 mb-2">QBO/External Payroll Management</h3>
+                        <p class="text-sm text-stone-500 mb-3 border-b pb-3">Service provided on **your** QuickBooks Online (QBO) or ADP. Client maintains software subscription.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-stone-50 p-3 rounded border border-stone-300">
+                                <h4 class="font-bold text-navy-800 text-sm">Monitoring Only</h4>
+                                <div class="text-lg font-bold text-stone-600 mb-1">$75<span class="text-xs font-normal">/mo</span></div>
+                                <button onclick="addExternalPayrollTier('p_external_monitor', 75)" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-xs font-bold py-1 rounded transition">Add Monitoring</button>
+                            </div>
+                            <div class="bg-stone-50 p-3 rounded border border-stone-300">
+                                <h4 class="font-bold text-navy-800 text-sm">Hybrid Management</h4>
+                                <div class="text-lg font-bold text-stone-600 mb-1">$125<span class="text-xs font-normal">/mo</span></div>
+                                <button onclick="addExternalPayrollTier('p_external_hybrid', 125)" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-xs font-bold py-1 rounded transition">Add Hybrid</button>
+                            </div>
+                        </div>
+                        <div class="mt-3 flex items-center gap-2">
+                            <input type="number" id="pay_qbo_addon" class="w-12 p-1 border rounded" min="0" value="0">
+                            <span class="text-xs text-stone-600">Add'l Employees/Contractors (+$15/ea/mo)</span>
+                            <button onclick="addExternalPayrollModifier()" class="bg-stone-600 text-white text-xs px-2 py-1 rounded">Add</button>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 bg-white border border-navy-800 border-2 rounded-lg p-6 mt-4">
+                        <div class="flex flex-col md:flex-row justify-between items-start gap-4">
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-xl text-navy-900 mb-2">HR Advisory Retainer</h3>
+                                <p class="text-sm text-stone-600">Ongoing guidance for 1-10 employees. Advisory support only.</p>
+                            </div>
+                            <button onclick="addDirectItem('hr_retainer', 'HR Advisory Retainer', 75, 'monthly', 'payroll')" class="bg-forest-600 hover:bg-forest-700 text-white text-sm font-bold py-2 px-4 rounded transition">Add ($75/mo)</button>
+                        </div>
+                    </div>
+                </div>`;
         }
 
-        function renderGenericTab(container, tabId) {
-            const data = servicesData[tabId];
-            let html = `
+        function renderConsultingTab(container) {
+            container.innerHTML = `
                 <div class="bg-white rounded-lg shadow-sm p-6 animate-fade-in">
-                    <h2 class="text-2xl font-bold text-navy-900 mb-2">${data.title}</h2>
-                    <p class="text-stone-600 mb-6 border-b border-stone-200 pb-4">${data.intro}</p>
+                    <h2 class="text-2xl font-bold text-navy-900 mb-2">Consulting & Formation</h2>
+                    <p class="text-stone-600 mb-6 border-b border-stone-200 pb-4">Expert guidance on business structure and risk.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            `;
-            data.items.forEach(item => {
-                html += renderTaxCard({
-                    id: item.id, title: item.name, price: item.price, desc: item.desc,
-                    btnAction: `addDirectItem('${item.id}', '${item.name}', ${item.price}, '${item.type}', '${item.cat}')`,
-                    monthly: item.type === 'monthly'
-                });
-            });
-            html += `</div></div>`;
-            container.innerHTML = html;
-        }
-
-        function renderTaxCard({id, title, price, desc, btnAction, monthly = false}) {
-            const isSelected = quoteItems.some(q => q.id === id);
-            const btnClass = isSelected ? "bg-stone-400 cursor-not-allowed" : "bg-navy-800 hover:bg-navy-900";
-            const btnText = isSelected ? "Added" : "Add to Quote";
-            const priceDisplay = monthly ? `$${price}/mo` : `$${price}`;
-
-            return `
-                <div class="service-card bg-white border border-stone-200 rounded-lg p-4 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-bold text-navy-900">${title}</h3>
-                            <span class="bg-stone-100 text-navy-800 text-xs font-bold px-2 py-1 rounded">${priceDisplay}</span>
+                        <div class="md:col-span-2 bg-stone-50 p-4 rounded-lg border border-stone-200">
+                            <h3 class="font-bold text-navy-900 mb-3 text-lg">Business Entity Formation</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="bg-white p-4 rounded border border-stone-300">
+                                    <h4 class="font-bold text-navy-800 mb-1">Tier 1</h4>
+                                    <div class="text-2xl font-bold text-forest-600 mb-2">$250</div>
+                                    <p class="text-xs text-stone-600 mb-2">Basic Registration & EIN.</p>
+                                    <button onclick="addDirectItem('c3_tier1', 'Entity Formation (Tier 1)', 250, 'onetime', 'consulting')" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-xs font-bold py-2 rounded transition">Add Tier 1</button>
+                                </div>
+                                <div class="bg-white p-4 rounded border-2 border-navy-800 relative shadow-md">
+                                    <h4 class="font-bold text-navy-800 mb-1">Tier 2</h4>
+                                    <div class="text-2xl font-bold text-forest-600 mb-2">$450</div>
+                                    <p class="text-xs text-stone-600 mb-2">Tier 1 + Op Agreement & Tax Regs.</p>
+                                    <button onclick="addDirectItem('c3_tier2', 'Business Launch (Tier 2)', 450, 'onetime', 'consulting')" class="w-full bg-forest-600 hover:bg-forest-700 text-white text-xs font-bold py-2 rounded transition">Add Tier 2</button>
+                                </div>
+                                <div class="bg-white p-4 rounded border border-stone-300">
+                                    <h4 class="font-bold text-navy-800 mb-1">Tier 3</h4>
+                                    <div class="text-2xl font-bold text-forest-600 mb-2">$800</div>
+                                    <p class="text-xs text-stone-600 mb-2">Tier 2 + Bookkeeping Setup & Payroll Setup.</p>
+                                    <button onclick="addDirectItem('c3_tier3', 'Full Infrastructure (Tier 3)', 800, 'onetime', 'consulting')" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-xs font-bold py-2 rounded transition">Add Tier 3</button>
+                                </div>
+                            </div>
                         </div>
-                        <p class="text-sm text-stone-500 mb-4">${desc}</p>
+                        <div class="service-card bg-white border border-stone-200 rounded-lg p-4">
+                            <h3 class="font-bold text-navy-900 mb-2">Cash Controls Review</h3>
+                            <select id="sel_fraud_review" class="w-full text-sm border-stone-300 rounded p-2 bg-stone-50 mb-3">
+                                <option value="500">Basic ($500)</option>
+                                <option value="650">Standard ($650)</option>
+                                <option value="custom">Advanced (Custom)</option>
+                            </select>
+                            <button onclick="addFraudReview()" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Review</button>
+                        </div>
+                        <div class="service-card bg-white border border-stone-200 rounded-lg p-4 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-navy-900 mb-1">Action Plan Session</h3>
+                                <p class="text-sm text-stone-500 mb-3">Fixed-fee strategy call.</p>
+                            </div>
+                            <button onclick="addDirectItem('c1', 'Action Plan Session (60m)', 100, 'onetime', 'consulting')" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add ($100)</button>
+                        </div>
                     </div>
-                    <button onclick="${btnAction}" ${isSelected ? 'disabled' : ''} class="w-full ${btnClass} text-white text-sm font-bold py-2 rounded transition">${btnText}</button>
-                </div>
-            `;
+                </div>`;
         }
 
-        // --- ADD TO QUOTE LOGIC ---
-
+        // Logic Functions
         function addDirectItem(id, name, price, type, cat) {
             if (!quoteItems.some(q => q.id === id)) {
                 quoteItems.push({ id, name, price, type, cat });
                 updateQuote();
-                if(currentTab === cat) switchTab(cat); 
-                else renderContent(currentTab); 
             }
         }
 
-        // 1. Simple Individual
-        function addSimpleReturn() {
-            let price = 225;
-            let name = "Simple Individual Return";
+        function addBookkeepingTier(id, name, price) {
+            // Remove any existing bookkeeping tier (items starting with b_start, b_core, b_adv)
+            quoteItems = quoteItems.filter(i => !['b_start', 'b_core', 'b_adv'].includes(i.id));
             
-            const mfj = document.getElementById('chk_mfj').checked;
-            const scha = document.getElementById('chk_scha').checked;
-
-            if (mfj) { price += 30; name += " (MFJ)"; }
-            if (scha) { price += 75; name += " + Sch A"; }
-
-            // Remove previous instances to prevent duplicates/stacking
-            quoteItems = quoteItems.filter(i => !i.id.startsWith('t1')); 
-            
-            quoteItems.push({ id: `t1_${mfj}_${scha}`, name, price, type: 'onetime', cat: 'tax' });
+            quoteItems.push({ id, name, price, type: 'monthly', cat: 'bookkeeping' });
             updateQuote();
         }
 
-        // 2. Schedule C
+        function addBookkeepingExtras() {
+            // Remove previous modifiers
+            quoteItems = quoteItems.filter(i => i.id !== 'bk_modifiers');
+            
+            let total = 0;
+            let details = [];
+            
+            if (document.getElementById('bk_qbo').checked) { total += 25; details.push("QBO/Ext"); }
+            if (document.getElementById('bk_sales_tax').checked) { total += 25; details.push("Sales Tax"); }
+            if (document.getElementById('bk_tipped').checked) { total += 25; details.push("Tipped/Cash"); }
+            if (document.getElementById('bk_contractor').checked) { total += 25; details.push("Contractors"); }
+            if (document.getElementById('bk_accounts').checked) { total += 25; details.push("Extra Accts"); }
+            
+            if (total > 0) {
+                quoteItems.push({ id: 'bk_modifiers', name: `Bookkeeping Add-ons (${details.join(', ')})`, price: total, type: 'monthly', cat: 'bookkeeping' });
+            }
+            updateQuote();
+        }
+
+        function addSimpleReturn() {
+            let price = 225, name = "Simple Individual Return";
+            if (document.getElementById('chk_scha_complex').checked) { price += 75; name += " + Complex Itemizing"; }
+            quoteItems = quoteItems.filter(i => !i.id.startsWith('t1'));
+            quoteItems.push({ id: `t1_${price}`, name, price, type: 'onetime', cat: 'tax' });
+            updateQuote();
+        }
+
+        function addInterestDividends() {
+            const val = parseInt(document.getElementById('sel_int_div').value);
+            const name = val === 40 ? "Interest/Divs (1-2 Src)" : "Interest/Divs (3+ Src)";
+            quoteItems = quoteItems.filter(i => !i.id.startsWith('t_int_div'));
+            quoteItems.push({ id: `t_int_div_${val}`, name: name, price: val, type: 'onetime', cat: 'tax' });
+            updateQuote();
+        }
+
+        function addStates() {
+            const val = document.getElementById('sel_states').value;
+            if (val === 'custom') { alert('Contact for custom quote.'); return; }
+            const price = parseInt(val);
+            quoteItems = quoteItems.filter(i => !i.id.startsWith('t_state'));
+            quoteItems.push({ id: `t_state_${price}`, name: `State Returns ($${price})`, price, type: 'onetime', cat: 'tax' });
+            updateQuote();
+        }
+
         function addScheduleC() {
             const val = parseInt(document.getElementById('sel_sch_c').value);
             const clean = document.getElementById('chk_sch_c_clean').checked;
             const price = val + (clean ? 100 : 0);
-            const id = `t_sch_c_${val}_${clean ? 'clean' : 'std'}`;
-            const name = `Business Return (Sch C) ${clean ? '+ Cleanup' : ''}`;
             quoteItems = quoteItems.filter(i => !i.id.startsWith('t_sch_c'));
-            quoteItems.push({ id, name, price, type: 'onetime', cat: 'tax' });
+            quoteItems.push({ id: `t_sch_c_${price}`, name: `Business (Sch C)${clean ? ' + Cleanup' : ''}`, price, type: 'onetime', cat: 'tax' });
             updateQuote();
         }
 
-        // 3. 1099-B
         function add1099B() {
             const val = document.getElementById('sel_1099b').value;
-            if (val === 'custom') { alert('For 200+ trades, please contact us for a custom quote.'); return; }
+            if (val === 'custom') { alert('Contact for custom quote.'); return; }
             const price = parseInt(val);
-            const id = `t_1099b_${price}`;
-            const name = `Investment Fees (${price === 50 ? '1-25' : '26-200'} trades)`;
             quoteItems = quoteItems.filter(i => !i.id.startsWith('t_1099b'));
-            quoteItems.push({ id, name, price, type: 'onetime', cat: 'tax' });
+            quoteItems.push({ id: `t_1099b_${price}`, name: `Investments ($${price})`, price, type: 'onetime', cat: 'tax' });
             updateQuote();
         }
 
-        // 4. Rentals
         function addRentals() {
             const val = document.getElementById('sel_rentals').value;
-            if (val === 'custom') { alert('For 4+ properties, please contact us for a custom quote.'); return; }
+            if (val === 'custom') { alert('Contact for custom quote.'); return; }
             const price = parseInt(val);
-            const id = `t_rent_${price}`;
-            const name = `Rental Fees (${price === 125 ? '1 Prop' : '2-3 Props'})`;
             quoteItems = quoteItems.filter(i => !i.id.startsWith('t_rent'));
-            quoteItems.push({ id, name, price, type: 'onetime', cat: 'tax' });
+            quoteItems.push({ id: `t_rent_${price}`, name: `Rentals ($${price})`, price, type: 'onetime', cat: 'tax' });
             updateQuote();
         }
 
-        // 5. Cleanup
-        function addCleanup() {
-            const val = document.getElementById('sel_cleanup').value;
-            if (val === 'custom') { alert('For 12+ months backlog, please contact us for a custom quote.'); return; }
-            const price = parseInt(val);
-            const id = `b_clean_${price}`;
-            const name = `Initial Cleanup (${val === '350' ? '1-3mo' : val === '500' ? '4-6mo' : '7-12mo'})`;
-            quoteItems = quoteItems.filter(i => !i.id.startsWith('b_clean'));
-            quoteItems.push({ id, name, price, type: 'onetime', cat: 'bookkeeping' });
-            updateQuote();
-        }
-
-        // 6. States
-        function addStates() {
-            const val = document.getElementById('sel_states').value;
-            if (val === 'custom') { alert('For 4+ states, please contact us for a custom quote.'); return; }
-            const price = parseInt(val);
-            const id = `t_state_${price}`;
-            const name = `State Returns (${price === 75 ? '1 State' : price === 150 ? '2 States' : '3 States'})`;
-            quoteItems = quoteItems.filter(i => !i.id.startsWith('t_state'));
-            quoteItems.push({ id, name, price, type: 'onetime', cat: 'tax' });
-            updateQuote();
-        }
-
-         // 7. ITIN
-         function addITIN() {
+        function addITIN() {
             const hasPP = document.querySelector('input[name="itin_pp"]:checked').value === 'yes';
             const price = hasPP ? 125 : 175;
-            const id = `t_itin_${hasPP ? 'yes' : 'no'}`;
-            const name = `ITIN Application (${hasPP ? 'W/ Passport' : 'No Passport'})`;
             quoteItems = quoteItems.filter(i => !i.id.startsWith('t_itin'));
-            quoteItems.push({ id, name, price, type: 'onetime', cat: 'tax' });
+            quoteItems.push({ id: `t_itin_${price}`, name: `ITIN App (${hasPP ? 'w/PP' : 'No PP'})`, price, type: 'onetime', cat: 'tax' });
             updateQuote();
-         }
+        }
 
-         // 8. Payroll Extras
-         function addPayrollExtras() {
-            // Remove previous extras
-            quoteItems = quoteItems.filter(i => i.cat !== 'payroll' || (i.id === 'p_auto' || i.id === 'p_hybrid'));
+        function addNonprofit() {
+            const val = document.getElementById('sel_nonprofit').value;
+            if (val === 'custom') { alert('Contact for custom quote.'); return; }
+            const price = parseInt(val);
+            quoteItems = quoteItems.filter(i => !i.id.startsWith('t_nonprofit'));
+            quoteItems.push({ id: `t_nonprofit_${price}`, name: `Nonprofit Tax ($${price})`, price, type: 'onetime', cat: 'tax' });
+            updateQuote();
+        }
 
-            // Monthly
-            const emp = parseInt(document.getElementById('pay_add_emp').value) * 10;
-            const cont = parseInt(document.getElementById('pay_contractor').value) * 10;
-            const state = parseInt(document.getElementById('pay_state').value) * 25;
-            const tips = document.getElementById('pay_tips').checked ? 25 : 0;
-            const garn = document.getElementById('pay_garn').checked ? 10 : 0;
+        function addCleanup() {
+            const val = document.getElementById('sel_cleanup').value;
+            if (val === 'custom') { alert('Contact for custom quote.'); return; }
+            const price = parseInt(val);
+            quoteItems = quoteItems.filter(i => !i.id.startsWith('b_clean'));
+            quoteItems.push({ id: `b_clean_${price}`, name: `Initial Cleanup ($${price})`, price, type: 'onetime', cat: 'bookkeeping' });
+            updateQuote();
+        }
+
+        function addFraudReview() {
+            const val = document.getElementById('sel_fraud_review').value;
+            if (val === 'custom') { alert('Contact for custom quote.'); return; }
+            const price = parseInt(val);
+            quoteItems = quoteItems.filter(i => !i.id.startsWith('c_fraud'));
+            quoteItems.push({ id: `c_fraud_${price}`, name: `Fraud Review ($${price})`, price, type: 'onetime', cat: 'consulting' });
+            updateQuote();
+        }
+
+        function addDrakePayrollExtras() {
+            quoteItems = quoteItems.filter(i => !i.id.startsWith('p_drake_extra'));
             
-            const totalMo = emp + cont + state + tips + garn;
-            if (totalMo > 0) {
-                quoteItems.push({ id: 'p_extra_mo', name: 'Payroll Add-ons (Mo)', price: totalMo, type: 'monthly', cat: 'payroll' });
-            }
+            const emp = parseInt(document.getElementById('pay_add_emp_drake').value || 0) * 15;
+            const state = parseInt(document.getElementById('pay_state_drake').value || 0) * 25;
+            const tipped = document.getElementById('pay_tipped_drake').checked ? 25 : 0;
+            const garn = document.getElementById('pay_garn_drake').checked ? 25 : 0;
+            const moTotal = emp + state + tipped + garn;
+            if (moTotal > 0) quoteItems.push({ id: 'p_drake_extra_mo', name: 'Drake Monthly Add-ons', price: moTotal, type: 'monthly', cat: 'payroll' });
 
-            // One-Time
-            const setup = parseInt(document.getElementById('pay_setup').value);
-            const runs = parseInt(document.getElementById('pay_run').value) * 25;
-            const amend = parseInt(document.getElementById('pay_amend').value) * 50;
-
-            if (setup > 0) quoteItems.push({ id: 'p_setup', name: 'Payroll Setup Fee', price: setup, type: 'onetime', cat: 'payroll' });
-            if (runs > 0) quoteItems.push({ id: 'p_runs', name: 'Off-Cycle Runs', price: runs, type: 'onetime', cat: 'payroll' });
-            if (amend > 0) quoteItems.push({ id: 'p_amend', name: 'Payroll Amendments', price: amend, type: 'onetime', cat: 'payroll' });
-
+            const runs = parseInt(document.getElementById('pay_run_drake').value || 0) * 25;
+            const amend = parseInt(document.getElementById('pay_amend_drake').value || 0) * 50;
+            const checks = parseInt(document.getElementById('pay_check_drake').value || 0) * 10;
+            const notices = parseInt(document.getElementById('pay_notice_drake').value || 0) * 125;
+            const oneTotal = runs + amend + checks + notices;
+            if (oneTotal > 0) quoteItems.push({ id: 'p_drake_extra_one', name: 'Drake One-Time Fees', price: oneTotal, type: 'onetime', cat: 'payroll' });
+            
             updateQuote();
-         }
+        }
 
+        function addExternalPayrollTier(id, price) {
+            quoteItems = quoteItems.filter(i => !i.id.startsWith('p_ext_tier'));
+            quoteItems.push({ id: `p_ext_tier_${price}`, name: id === 'p_external_monitor' ? 'Ext Payroll (Monitor)' : 'Ext Payroll (Hybrid)', price, type: 'monthly', cat: 'payroll' });
+            updateQuote();
+        }
+
+        function addExternalPayrollModifier() {
+            quoteItems = quoteItems.filter(i => !i.id.startsWith('p_ext_mod'));
+            const count = parseInt(document.getElementById('pay_qbo_addon').value || 0);
+            if (count > 0) quoteItems.push({ id: 'p_ext_mod', name: `Ext Payroll Add-ons (${count})`, price: count * 15, type: 'monthly', cat: 'payroll' });
+            updateQuote();
+        }
 
         function removeFromQuote(itemId) {
             quoteItems = quoteItems.filter(i => i.id !== itemId);
             updateQuote();
-            if (servicesData[currentTab] || currentTab === 'tax' || currentTab === 'bookkeeping' || currentTab === 'payroll') renderContent(currentTab); 
         }
 
         function resetQuote() {
             quoteItems = [];
             document.getElementById('discount-input').value = '';
             clearDiscountCode(); 
-            renderContent(currentTab);
+            // Only re-render if elements exist to clear checkmarks etc, but quote list is cleared
+            document.getElementById('selected-items').innerHTML = '<p class="text-stone-500 italic text-center py-4">Select services to build your quote.</p>';
+            document.getElementById('total-onetime').innerText = '$0';
+            document.getElementById('total-monthly').innerText = '$0';
+            updateChart(0,0,0);
         }
-        
-        // --- QUOTE & DISCOUNT LOGIC ---
 
         function clearDiscountCode() {
             currentDiscountCode = 'none';
@@ -707,163 +846,98 @@
         }
 
         function applyDiscountCode() {
-            const input = document.getElementById('discount-input');
-            const feedback = document.getElementById('discount-feedback');
-            const code = input.value.toUpperCase().trim();
-
+            const code = document.getElementById('discount-input').value.toUpperCase().trim();
             if (discountRules[code]) {
                 currentDiscountCode = code;
-                input.disabled = true;
+                document.getElementById('discount-input').disabled = true;
             } else {
                 currentDiscountCode = 'none';
-                feedback.innerText = "Code not recognized. Please check with Hennig Financial LLC.";
-                feedback.classList.remove('text-forest-400', 'text-stone-400');
-                feedback.classList.add('text-alert-500');
-                input.disabled = false;
+                document.getElementById('discount-feedback').innerText = "Code not recognized.";
+                document.getElementById('discount-feedback').className = "text-xs mt-1 h-auto min-h-[1rem] text-alert-500";
             }
             updateQuote();
         }
 
         function updateQuote() {
-            const listContainer = document.getElementById('selected-items');
-            const totalOneTimeEl = document.getElementById('total-onetime');
-            const totalMonthlyEl = document.getElementById('total-monthly');
+            const list = document.getElementById('selected-items');
+            list.innerHTML = '';
+            
+            const rules = discountRules[currentDiscountCode] || discountRules['none'];
             const feedback = document.getElementById('discount-feedback');
-            
-            const rules = discountRules[currentDiscountCode] || discountRules['none']; 
-            
-            if (currentDiscountCode === 'none') {
-                feedback.innerText = rules.publicDesc;
-                feedback.classList.remove('text-forest-400', 'text-alert-500');
-                feedback.classList.add('text-stone-400');
-                document.getElementById('discount-input').disabled = false;
-            } else {
-                feedback.innerText = rules.privateDesc;
-                feedback.classList.remove('text-alert-500', 'text-stone-400');
-                feedback.classList.add('text-forest-400');
-                document.getElementById('discount-input').disabled = true;
-            }
+            feedback.innerText = currentDiscountCode === 'none' ? rules.publicDesc : rules.privateDesc;
+            feedback.className = `text-xs mt-1 h-auto min-h-[1rem] ${currentDiscountCode === 'none' ? 'text-stone-400' : 'text-forest-400'}`;
 
-            listContainer.innerHTML = '';
-            
-            let sumOneTime = 0;
-            let sumMonthly = 0;
-            let costTax = 0; let costBook = 0; let costOther = 0;
+            let tOne = 0, tMo = 0, cTax = 0, cBook = 0, cOther = 0;
 
-            if (quoteItems.length === 0) {
-                listContainer.innerHTML = '<p class="text-stone-500 italic text-center py-4">Select services to build your quote.</p>';
-            }
+            if (quoteItems.length === 0) list.innerHTML = '<p class="text-stone-500 italic text-center py-4">Select services to build your quote.</p>';
 
             quoteItems.forEach(item => {
-                let finalPrice = item.price;
-                let appliedDiscountRate = 0;
-
-                if (rules.all > 0) {
-                    appliedDiscountRate = rules.all;
-                } else {
-                    if (item.cat === 'tax' && rules.tax > 0) appliedDiscountRate = rules.tax;
-                    else if (item.cat === 'bookkeeping') {
-                        if (currentDiscountCode === 'FOUNDERS2026') {
-                            if (item.type === 'onetime' && rules.book_all > 0) appliedDiscountRate = rules.book_all;
-                            if (item.type === 'monthly' && rules.book_all > 0) appliedDiscountRate = rules.book_all; 
-                        }
-                    }
-                }
-
-                finalPrice = finalPrice * (1 - appliedDiscountRate);
-
-                if (item.type === 'monthly') sumMonthly += finalPrice;
-                else sumOneTime += finalPrice;
-
-                const annualizedValue = item.type === 'monthly' ? finalPrice * 12 : finalPrice;
-                if (item.cat === 'tax') costTax += annualizedValue;
-                else if (item.cat === 'bookkeeping') costBook += annualizedValue;
-                else costOther += annualizedValue;
-
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center bg-navy-800 p-2 rounded border border-navy-700';
+                let price = item.price;
+                let rate = 0;
                 
-                let discountText = '';
-                if (appliedDiscountRate > 0) {
-                    discountText = `<div class="text-[10px] text-forest-400">Discount Applied</div>`;
-                    if (currentDiscountCode === 'FOUNDERS2026' && item.cat === 'bookkeeping' && item.type === 'monthly') {
-                        discountText = `<div class="text-[10px] text-forest-400">Discount Applied (3 Mo Cap)</div>`;
-                    }
+                if (rules.all > 0) rate = rules.all;
+                else if (item.cat === 'tax' && rules.tax > 0) rate = rules.tax;
+                else if (item.cat === 'bookkeeping' && rules.book_all > 0) {
+                    if (['FOUNDERS2026', 'LOCALBIZ'].includes(currentDiscountCode)) rate = rules.book_all; 
                 }
 
-                div.innerHTML = `
-                    <div>
-                        <div class="text-xs font-bold text-stone-200">${item.name}</div>
-                        ${discountText}
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-mono text-stone-300">$${Math.round(finalPrice)}</span>
-                        <button onclick="removeFromQuote('${item.id}')" class="text-stone-500 hover:text-alert-500">&times;</button>
-                    </div>
-                `;
-                listContainer.appendChild(div);
+                price = price * (1 - rate);
+                if (item.type === 'monthly') tMo += price; else tOne += price;
+                
+                const ann = item.type === 'monthly' ? price * 12 : price;
+                if (item.cat === 'tax') cTax += ann;
+                else if (item.cat === 'bookkeeping') cBook += ann;
+                else cOther += ann;
+
+                const el = document.createElement('div');
+                el.className = 'flex justify-between items-center bg-navy-800 p-2 rounded border border-navy-700 text-white';
+                el.innerHTML = `<div><div class="text-xs font-bold">${item.name}</div>${rate > 0 ? '<div class="text-[10px] text-forest-400">Discount Applied</div>' : ''}</div>
+                                <div class="flex items-center gap-2"><span class="text-xs font-mono">$${Math.round(price)}</span><button onclick="removeFromQuote('${item.id}')" class="text-stone-500 hover:text-alert-500">&times;</button></div>`;
+                list.appendChild(el);
             });
 
-            totalOneTimeEl.innerText = `$${Math.round(sumOneTime)}`;
-            totalMonthlyEl.innerText = `$${Math.round(sumMonthly)}/mo`;
-
-            updateChart(costTax, costBook, costOther);
+            document.getElementById('total-onetime').innerText = `$${Math.round(tOne)}`;
+            document.getElementById('total-monthly').innerText = `$${Math.round(tMo)}/mo`;
+            updateChart(cTax, cBook, cOther);
         }
 
-        // --- CHARTS ---
-
-        function initBookkeepingChart() {
-            const ctx = document.getElementById('bookkeepingChart');
-            if (!ctx) return;
-            const existingChart = Chart.getChart("bookkeepingChart");
-            if (existingChart) existingChart.destroy();
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Essentials', 'Standard', 'Premier'],
-                    datasets: [{
-                        label: 'Included Transactions/Mo',
-                        data: [75, 150, 500],
-                        backgroundColor: ['#e7e5e4', '#a8a29e', '#047857'],
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, display: false }, x: { grid: { display: false } } }
-                }
-            });
-        }
-
-        function updateChart(tax, book, other) {
+        function updateChart(t, b, o) {
             const ctx = document.getElementById('quoteChart').getContext('2d');
             if (quoteChart) quoteChart.destroy();
-            if (tax === 0 && book === 0 && other === 0) return;
-
+            if (t===0 && b===0 && o===0) return;
             quoteChart = new Chart(ctx, {
                 type: 'doughnut',
-                data: {
-                    labels: ['Tax', 'Bookkeeping', 'Advisory/Other'],
-                    datasets: [{
-                        data: [tax, book, other],
-                        backgroundColor: ['#1e3a8a', '#059669', '#f97316'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right', labels: { color: '#e7e5e4', boxWidth: 10, font: { size: 10 } } }
-                    }
-                }
+                data: { labels: ['Tax', 'Bookkeeping', 'Other'], datasets: [{ data: [t, b, o], backgroundColor: ['#1e3a8a', '#059669', '#f97316'], borderWidth: 0 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#e7e5e4', boxWidth: 10, font: { size: 10 } } } } }
             });
         }
 
-        document.addEventListener('DOMContentLoaded', () => { switchTab('tax'); });
+        function requestQuote(type) {
+            if (quoteItems.length === 0 || !document.getElementById('scope-confirm').checked) return alert('Please add services and confirm scope.');
+            let body = "Hennig Financial Quote Request:\n\n";
+            let t1 = 0, t2 = 0;
+            quoteItems.forEach(i => {
+                body += `- ${i.name}: $${i.price} (${i.type})\n`;
+                if(i.type==='monthly') t2+=i.price; else t1+=i.price;
+            });
+            body += `\nEst One-Time: $${t1}\nEst Monthly: $${t2}`;
+            if (currentDiscountCode !== 'none') body += `\nCode: ${currentDiscountCode}`;
+            
+            const sub = encodeURIComponent("Quote Request");
+            const b = encodeURIComponent(body);
+            
+            if (type === 'gmail') {
+                window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=ron@hennigfinancial.com&su=${sub}&body=${b}`, '_blank');
+            } else {
+                window.location.href = `mailto:ron@hennigfinancial.com?subject=${sub}&body=${b}`;
+            }
+        }
+        function requestQuoteGmailOnly() { requestQuote('gmail'); }
 
+        document.addEventListener('DOMContentLoaded', () => { 
+            switchTab('tax'); 
+            updateButtonState(); 
+        });
     </script>
 </body>
 </html>
