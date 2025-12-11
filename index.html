@@ -46,7 +46,7 @@
         <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
             <div class="flex items-center gap-4">
                 
-                <!-- LOGO SECTION: Ensure your file is named 'logo.png' in GitHub -->
+                <!-- LOGO SECTION -->
                 <img src="logo.png" alt="Hennig Financial Logo" class="h-14 w-auto object-contain">
                 
                 <div>
@@ -140,7 +140,7 @@
                     </label>
                 </div>
 
-                <div class="mb-6">
+                <div class="mb-4">
                     <label class="block text-xs text-stone-400 mb-1">Have a discount code?</label>
                     <div class="flex gap-2">
                         <input type="text" id="discount-input" placeholder="Enter code" class="flex-grow bg-navy-800 border border-navy-700 text-stone-100 text-sm rounded px-3 py-2 focus:outline-none focus:border-forest-600 uppercase">
@@ -148,6 +148,12 @@
                         <button onclick="clearDiscountCode()" class="bg-stone-600 hover:bg-stone-700 text-white text-xs font-bold px-3 py-2 rounded transition">&times;</button>
                     </div>
                     <p id="discount-feedback" class="text-xs mt-1 h-auto min-h-[1rem]"></p>
+                </div>
+
+                <!-- Referral Input (New) -->
+                <div class="mb-6">
+                    <label class="block text-xs text-stone-400 mb-1">Referred by (Name):</label>
+                    <input type="text" id="referral-input" placeholder="Name of person who sent you" class="w-full bg-navy-800 border border-navy-700 text-stone-100 text-sm rounded px-3 py-2 focus:outline-none focus:border-forest-600">
                 </div>
 
                 <div id="selected-items" class="space-y-2 mb-6 max-h-60 overflow-y-auto pr-2 text-sm">
@@ -247,7 +253,8 @@
             'VETERANS': { tax: 0.15, book_all: 0, book_mo_cap: false, all: 0, privateDesc: "Veteran Discount: 15% off tax.", publicDesc: "" },
             'WOMENOWNED': { tax: 0.15, book_all: 0, book_mo_cap: false, all: 0, privateDesc: "Women-Owned Discount: 15% off tax.", publicDesc: "" },
             'HENNIGFAM': { tax: 0, book_all: 0, book_mo_cap: false, all: 0.25, privateDesc: "Family Discount: 25% off all.", publicDesc: "" },
-            'LOCALBIZ': { tax: 0.10, book_all: 0.10, book_mo_cap: true, all: 0, privateDesc: "Local Biz: 10% off.", publicDesc: "" }
+            'LOCALBIZ': { tax: 0.10, book_all: 0.10, book_mo_cap: true, all: 0, privateDesc: "Local Biz: 10% off.", publicDesc: "" },
+            'TRUSTED26': { tax: 0.15, book_all: 0.15, book_mo_cap: true, consulting_flat: 50, all: 0, privateDesc: "Referral Rate: 15% Tax/Book + $50 off Consulting.", publicDesc: "" }
         };
 
         let currentTab = 'tax';
@@ -869,8 +876,8 @@
         function resetQuote() {
             quoteItems = [];
             document.getElementById('discount-input').value = '';
+            document.getElementById('referral-input').value = '';
             clearDiscountCode(); 
-            // Only re-render if elements exist to clear checkmarks etc, but quote list is cleared
             document.getElementById('selected-items').innerHTML = '<p class="text-stone-500 italic text-center py-4">Select services to build your quote.</p>';
             document.getElementById('total-onetime').innerText = '$0';
             document.getElementById('total-monthly').innerText = '$0';
@@ -912,14 +919,27 @@
             quoteItems.forEach(item => {
                 let price = item.price;
                 let rate = 0;
+                let flat = 0;
                 
-                if (rules.all > 0) rate = rules.all;
-                else if (item.cat === 'tax' && rules.tax > 0) rate = rules.tax;
-                else if (item.cat === 'bookkeeping' && rules.book_all > 0) {
-                    if (['FOUNDERS2026', 'LOCALBIZ'].includes(currentDiscountCode)) rate = rules.book_all; 
+                // Flat Discount Logic (Consulting only for TRUSTED26)
+                if (rules.consulting_flat > 0 && item.cat === 'consulting') {
+                    flat = rules.consulting_flat;
+                } else {
+                    // Percentage Logic
+                    if (rules.all > 0) rate = rules.all;
+                    else if (item.cat === 'tax' && rules.tax > 0) rate = rules.tax;
+                    else if (item.cat === 'bookkeeping' && rules.book_all > 0) {
+                        if (['FOUNDERS2026', 'LOCALBIZ', 'TRUSTED26'].includes(currentDiscountCode)) rate = rules.book_all; 
+                    }
                 }
 
-                price = price * (1 - rate);
+                // Apply discounts
+                if (flat > 0) {
+                    price = Math.max(0, price - flat);
+                } else {
+                    price = price * (1 - rate);
+                }
+
                 if (item.type === 'monthly') tMo += price; else tOne += price;
                 
                 const ann = item.type === 'monthly' ? price * 12 : price;
@@ -929,7 +949,7 @@
 
                 const el = document.createElement('div');
                 el.className = 'flex justify-between items-center bg-navy-800 p-2 rounded border border-navy-700 text-white';
-                el.innerHTML = `<div><div class="text-xs font-bold">${item.name}</div>${rate > 0 ? '<div class="text-[10px] text-forest-400">Discount Applied</div>' : ''}</div>
+                el.innerHTML = `<div><div class="text-xs font-bold">${item.name}</div>${(rate > 0 || flat > 0) ? '<div class="text-[10px] text-forest-400">Discount Applied</div>' : ''}</div>
                                 <div class="flex items-center gap-2"><span class="text-xs font-mono">$${Math.round(price)}</span><button onclick="removeFromQuote('${item.id}')" class="text-stone-500 hover:text-alert-500">&times;</button></div>`;
                 list.appendChild(el);
             });
@@ -954,6 +974,11 @@
             if (quoteItems.length === 0 || !document.getElementById('scope-confirm').checked) return alert('Please add services and confirm scope.');
             let body = "Hennig Financial Quote Request:\n\n";
             let t1 = 0, t2 = 0;
+            
+            // Add Referral Name to Email
+            const refName = document.getElementById('referral-input').value;
+            if (refName) body += `Referred By: ${refName}\n\n`;
+
             quoteItems.forEach(i => {
                 body += `- ${i.name}: $${i.price} (${i.type})\n`;
                 if(i.type==='monthly') t2+=i.price; else t1+=i.price;
