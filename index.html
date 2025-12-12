@@ -179,16 +179,18 @@
                 </div>
 
                 <div class="mt-6 space-y-3">
-                    <button onclick="requestQuoteGmailOnly()" id="request-gmail-btn" disabled class="w-full bg-stone-600 cursor-not-allowed text-stone-400 font-bold py-3 rounded transition shadow-md flex justify-center items-center gap-2">
+                    <!-- Default Mail App Button (Primary) -->
+                    <button onclick="requestQuote('default')" id="request-package-btn" disabled class="w-full bg-stone-600 cursor-not-allowed text-stone-400 font-bold py-3 rounded transition shadow-md flex justify-center items-center gap-2">
                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                          </svg>
-                        Request Quote via Gmail
+                        Send Quote Request
                     </button>
                     
                     <div class="text-center">
-                        <button onclick="requestQuote('default')" id="request-package-btn" disabled class="text-xs text-stone-400 underline flex items-center justify-center gap-1 mx-auto cursor-not-allowed">
-                            Use Default Mail App (Outlook, Apple Mail)
+                        <!-- Gmail Button (Secondary) -->
+                        <button onclick="requestQuoteGmailOnly()" id="request-gmail-btn" disabled class="text-xs text-stone-400 underline flex items-center justify-center gap-1 mx-auto cursor-not-allowed">
+                            Trouble? Try Gmail Web Link
                         </button>
                     </div>
                 </div>
@@ -269,21 +271,23 @@
 
         function updateButtonState() {
             const isConfirmed = document.getElementById('scope-confirm').checked;
+            const defaultBtn = document.getElementById('request-package-btn');
             const gmailBtn = document.getElementById('request-gmail-btn');
-            const defBtn = document.getElementById('request-package-btn');
             
-            gmailBtn.disabled = !isConfirmed;
-            gmailBtn.classList.toggle('bg-forest-600', isConfirmed);
-            gmailBtn.classList.toggle('hover:bg-forest-700', isConfirmed);
-            gmailBtn.classList.toggle('bg-stone-600', !isConfirmed);
-            gmailBtn.classList.toggle('cursor-not-allowed', !isConfirmed);
-            gmailBtn.classList.toggle('text-white', isConfirmed);
-            gmailBtn.classList.toggle('text-stone-400', !isConfirmed);
+            // Primary Button Logic
+            defaultBtn.disabled = !isConfirmed;
+            defaultBtn.classList.toggle('bg-forest-600', isConfirmed);
+            defaultBtn.classList.toggle('hover:bg-forest-700', isConfirmed);
+            defaultBtn.classList.toggle('bg-stone-600', !isConfirmed);
+            defaultBtn.classList.toggle('cursor-not-allowed', !isConfirmed);
+            defaultBtn.classList.toggle('text-white', isConfirmed);
+            defaultBtn.classList.toggle('text-stone-400', !isConfirmed);
 
-            defBtn.disabled = !isConfirmed;
-            defBtn.classList.toggle('text-stone-400', !isConfirmed);
-            defBtn.classList.toggle('hover:text-white', isConfirmed);
-            defBtn.classList.toggle('cursor-not-allowed', !isConfirmed);
+            // Secondary Button Logic
+            gmailBtn.disabled = !isConfirmed;
+            gmailBtn.classList.toggle('text-stone-400', !isConfirmed);
+            gmailBtn.classList.toggle('hover:text-white', isConfirmed);
+            gmailBtn.classList.toggle('cursor-not-allowed', !isConfirmed);
         }
 
         function switchTab(tabId) {
@@ -595,26 +599,21 @@
                         <p class="text-sm text-stone-500 mb-3">System config, YTD imports, registrations.</p>
                         <button onclick="addDirectItem('p_setup_drake', 'Drake Payroll Setup Fee', 200, 'onetime', 'payroll', this)" class="w-full bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold py-2 rounded transition">Add Setup Fee</button>
                     </div>
+                    
+                    <!-- Static Add-Ons Disclosure (Replaces Interactive Calculator) -->
                     <div class="md:col-span-2 bg-stone-50 p-4 rounded-lg border border-stone-200 mt-2 mb-4">
-                        <h3 class="font-bold text-navy-900 mb-3">Drake Payroll Add-Ons</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                            <div class="space-y-2">
-                                <h4 class="font-bold text-stone-600 text-xs uppercase">Monthly (Beyond Tier)</h4>
-                                <div class="flex justify-between items-center"><span>Add'l Emp ($15/ea)</span><input type="number" id="pay_add_emp_drake" class="w-12 p-1 border rounded" min="0" value="0"></div>
-                                <div class="flex justify-between items-center"><span>Multi-State ($25/st)</span><input type="number" id="pay_state_drake" class="w-12 p-1 border rounded" min="0" value="0"></div>
-                                <div class="flex gap-2"><input type="checkbox" id="pay_tipped_drake"> Tipped/Cash Heavy (+$25)</div>
-                                <div class="flex gap-2"><input type="checkbox" id="pay_garn_drake"> Garnishment (+$25)</div>
-                            </div>
-                            <div class="space-y-2">
-                                <h4 class="font-bold text-stone-600 text-xs uppercase">One-Time Fees</h4>
-                                <div class="flex justify-between items-center"><span>Off-Cycle ($25)</span><input type="number" id="pay_run_drake" class="w-12 p-1 border rounded" min="0" value="0"></div>
-                                <div class="flex justify-between items-center"><span>Amendments ($50)</span><input type="number" id="pay_amend_drake" class="w-12 p-1 border rounded" min="0" value="0"></div>
-                                <div class="flex justify-between items-center"><span>Checks ($10)</span><input type="number" id="pay_check_drake" class="w-12 p-1 border rounded" min="0" value="0"></div>
-                                <div class="flex justify-between items-center"><span>Notices ($125)</span><input type="number" id="pay_notice_drake" class="w-12 p-1 border rounded" min="0" value="0"></div>
-                            </div>
+                        <h3 class="font-bold text-navy-900 mb-2">Additional Payroll Fees (Informational)</h3>
+                        <p class="text-xs text-stone-600 mb-3">These potential costs are not added to the cart but may apply to your final invoice. Complex needs may require a custom quote.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-stone-700 font-medium">
+                            <div>• Add'l Employee: $15/ea</div>
+                            <div>• Multi-State: $25/state</div>
+                            <div>• Tipped/Cash Heavy: +$25/mo</div>
+                            <div>• Garnishments: +$25/mo</div>
+                            <div>• Off-Cycle Runs: $25</div>
+                            <div>• Amendments: $50</div>
                         </div>
-                        <button onclick="addDrakePayrollExtras(this)" class="w-full bg-forest-600 hover:bg-forest-700 text-white text-sm font-bold py-2 rounded transition mt-4">Add Drake Extras</button>
                     </div>
+
                     <div class="md:col-span-2 bg-white p-4 rounded-lg border border-stone-200 mt-4">
                         <h3 class="font-bold text-navy-900 mb-2">QBO/External Payroll Management</h3>
                         <p class="text-sm text-stone-500 mb-3 border-b pb-3">Service provided on **your** QuickBooks Online (QBO) or ADP. Client maintains software subscription.</p>
@@ -707,16 +706,13 @@
         }
 
         function addBookkeepingTier(id, name, price, btn) {
-            // Remove any existing bookkeeping tier (items starting with b_start, b_core, b_adv)
             quoteItems = quoteItems.filter(i => !['b_start', 'b_core', 'b_adv'].includes(i.id));
-            
             quoteItems.push({ id, name, price, type: 'monthly', cat: 'bookkeeping' });
             updateQuote();
             animateButton(btn);
         }
 
         function addBookkeepingExtras(btn) {
-            // Remove previous modifiers
             quoteItems = quoteItems.filter(i => i.id !== 'bk_modifiers');
             
             let total = 0;
@@ -828,27 +824,6 @@
             const price = parseInt(val);
             quoteItems = quoteItems.filter(i => !i.id.startsWith('c_fraud'));
             quoteItems.push({ id: `c_fraud_${price}`, name: `Fraud Review ($${price})`, price, type: 'onetime', cat: 'consulting' });
-            updateQuote();
-            animateButton(btn);
-        }
-
-        function addDrakePayrollExtras(btn) {
-            quoteItems = quoteItems.filter(i => !i.id.startsWith('p_drake_extra'));
-            
-            const emp = parseInt(document.getElementById('pay_add_emp_drake').value || 0) * 15;
-            const state = parseInt(document.getElementById('pay_state_drake').value || 0) * 25;
-            const tipped = document.getElementById('pay_tipped_drake').checked ? 25 : 0;
-            const garn = document.getElementById('pay_garn_drake').checked ? 25 : 0;
-            const moTotal = emp + state + tipped + garn;
-            if (moTotal > 0) quoteItems.push({ id: 'p_drake_extra_mo', name: 'Drake Monthly Add-ons', price: moTotal, type: 'monthly', cat: 'payroll' });
-
-            const runs = parseInt(document.getElementById('pay_run_drake').value || 0) * 25;
-            const amend = parseInt(document.getElementById('pay_amend_drake').value || 0) * 50;
-            const checks = parseInt(document.getElementById('pay_check_drake').value || 0) * 10;
-            const notices = parseInt(document.getElementById('pay_notice_drake').value || 0) * 125;
-            const oneTotal = runs + amend + checks + notices;
-            if (oneTotal > 0) quoteItems.push({ id: 'p_drake_extra_one', name: 'Drake One-Time Fees', price: oneTotal, type: 'onetime', cat: 'payroll' });
-            
             updateQuote();
             animateButton(btn);
         }
@@ -979,11 +954,35 @@
             const refName = document.getElementById('referral-input').value;
             if (refName) body += `Referred By: ${refName}\n\n`;
 
+            const rules = discountRules[currentDiscountCode] || discountRules['none'];
+
             quoteItems.forEach(i => {
-                body += `- ${i.name}: $${i.price} (${i.type})\n`;
-                if(i.type==='monthly') t2+=i.price; else t1+=i.price;
+                let price = i.price;
+                let rate = 0;
+                let flat = 0;
+                
+                // --- DUPLICATED DISCOUNT LOGIC START ---
+                if (rules.consulting_flat > 0 && i.cat === 'consulting') {
+                    flat = rules.consulting_flat;
+                } else {
+                    if (rules.all > 0) rate = rules.all;
+                    else if (i.cat === 'tax' && rules.tax > 0) rate = rules.tax;
+                    else if (i.cat === 'bookkeeping' && rules.book_all > 0) {
+                        if (['FOUNDERS2026', 'LOCALBIZ', 'TRUSTED26'].includes(currentDiscountCode)) rate = rules.book_all; 
+                    }
+                }
+
+                if (flat > 0) {
+                    price = Math.max(0, price - flat);
+                } else {
+                    price = price * (1 - rate);
+                }
+                // --- DUPLICATED DISCOUNT LOGIC END ---
+
+                body += `- ${i.name}: $${Math.round(price)} (${i.type})\n`;
+                if(i.type==='monthly') t2+=price; else t1+=price;
             });
-            body += `\nEst One-Time: $${t1}\nEst Monthly: $${t2}`;
+            body += `\nEst One-Time: $${Math.round(t1)}\nEst Monthly: $${Math.round(t2)}`;
             if (currentDiscountCode !== 'none') body += `\nCode: ${currentDiscountCode}`;
             
             const sub = encodeURIComponent("Quote Request");
